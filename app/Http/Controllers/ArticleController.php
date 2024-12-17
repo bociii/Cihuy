@@ -25,21 +25,38 @@ class ArticleController extends Controller
         return view('articles.create');
     }
 
-    public function store(Request $request)
-    {
+public function store(Request $request)
+{
+    // Validate the input
+    $validatedData = $request->validate([
+        'judul' => 'required|string|max:255',
+        'penulis' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
+    ], [
+        'judul.required' => 'Judul is required.',
+        'penulis.required' => 'Penulis is required.',
+        'deskripsi.required' => 'Deskripsi is required.',
+        'foto.required' => 'An image file is required.',
+        'foto.image' => 'The file must be an image.',
+        'foto.mimes' => 'Allowed image types are jpeg, png, jpg, and gif.',
+        'foto.max' => 'The image size must not exceed 2MB.',
+    ]);
 
-        $foto = $request->file('foto');
-        $foto->storeAs('public', $foto->hashName());
+    $foto = $request->file('foto');
+    $foto->storeAs('public', $foto->hashName());
 
-        Article::create([
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'deskripsi' => $request->deskripsi,
-            'foto' => $foto->hashName()
-        ]);
+    // Create the article
+    Article::create([
+        'judul' => $validatedData['judul'],
+        'penulis' => $validatedData['penulis'],
+        'deskripsi' => $validatedData['deskripsi'],
+        'foto' => $foto->hashName(),
+    ]);
 
-        return redirect()->route('article.index')->with('success', 'Add article Success');
-    }
+    return redirect()->route('article.index')->with('success', 'Add article Success');
+}
+
 
     public function edit(Article $article)
     {
@@ -47,26 +64,41 @@ class ArticleController extends Controller
     }
 
     public function update(Request $request, Article $article)
-    {
-        $article->judul = $request->judul;
-        $article->penulis = $request->penulis;
-        $article->deskripsi = $request->deskripsi;
+{
+    // Validate the input
+    $validatedData = $request->validate([
+        'judul' => 'required|string|max:255',
+        'penulis' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation, optional
+    ], [
+        'judul.required' => 'Judul is required.',
+        'penulis.required' => 'Penulis is required.',
+        'deskripsi.required' => 'Deskripsi is required.',
+        'foto.image' => 'The uploaded file must be an image.',
+        'foto.mimes' => 'Allowed image types are jpeg, png, jpg, and gif.',
+        'foto.max' => 'The image size must not exceed 2MB.',
+    ]);
 
-        
-        if ($request->file('foto')) {
+    // Update article data
+    $article->judul = $validatedData['judul'];
+    $article->penulis = $validatedData['penulis'];
+    $article->deskripsi = $validatedData['deskripsi'];
 
-            if ($article->foto !== "noimage.png") {
-                Storage::disk('local')->delete('public/' . $article->foto);
-            }
-            $foto = $request->file('foto');
-            $foto->storeAs('public', $foto->hashName());
-            $article->foto = $foto->hashName();
+    if ($request->file('foto')) {
+        if ($article->foto && $article->foto !== "noimage.png") {
+            Storage::disk('local')->delete('public/' . $article->foto);
         }
 
-        $article->update();
-
-        return redirect()->route('article.index')->with('success', 'Update article Success');
+        $foto = $request->file('foto');
+        $foto->storeAs('public', $foto->hashName());
+        $article->foto = $foto->hashName();
     }
+
+    $article->save();
+
+    return redirect()->route('article.index')->with('success', 'Update article Success');
+}
 
     public function destroy(Article $article)
     {

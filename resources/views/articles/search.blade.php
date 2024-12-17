@@ -4,7 +4,6 @@
             <h2 class="font-semibold text-2xl text-gray-800">All Articles</h2>
         </div>
 
-        <!-- Grid for Articles with 3 columns -->
         @if (count($results) > 0)
         <ul>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
@@ -23,7 +22,7 @@
                             </p>
                         </div>
                         <a href="{{ route('article.detail', $article) }}">
-                                <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-semibold transition">Read More</button>
+                        <button class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md font-semibold transition">Read More</button>
                             </a>
                     </div>
                 </div>
