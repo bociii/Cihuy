@@ -10,7 +10,6 @@
                   class="flex flex-col items-center gap-6">
                 @csrf
                 <div class="w-full flex justify-center">
-                    <!-- Image with explicit size, border, and padding -->
                     <img :src="imageUrl" class="rounded-md w-40 h-auto border-4 border-gray-300 p-1 shadow-md" />
                 </div>
 

@@ -15,7 +15,6 @@
                 <p class="text-muted text-center mb-4" style="font-size: 0.9rem;">
                     By: {{ $article->penulis }} | Published on {{ date('F d, Y') }}
                 </p>
-                <!-- Article Content with narrower width -->
                 <div class="text-start" style="max-width: 700px; margin-left: auto; margin-right: auto;">
                     <p class="fs-6" style="line-height: 1.6; color: #333;">
                         {!! nl2br(e($article->deskripsi)) !!}

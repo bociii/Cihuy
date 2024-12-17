@@ -19,7 +19,7 @@
                         </p>
                     </div>
                     <a href="{{ route('article.edit', $article) }}" class="block text-center">
-                        <button class="bg-gray-100 hover:bg-gray-200 px-6 py-2 rounded-md font-semibold w-full transition duration-200">
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-md font-semibold transition">
                             Edit
                         </button>
                     </a>
